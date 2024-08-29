@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Me perdonas? 😿</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .gradient-background {
+      background: rgb(255, 208, 229);
+      background: linear-gradient(180deg, rgba(255, 208, 229, 1) 0%, rgba(255, 232, 242, 1) 36%, rgba(255, 255, 255, 1) 100%);
+    }
+
+    .bounce2 {
+      animation: bounce2 2s ease infinite;
+    }
+
+    @keyframes bounce2 {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+
+    #responseButtons {
+      position: relative;
+      width: 350px;
+    }
+
+    #noButton, #yesButton {
+      position: absolute;
+    }
+
+    #yesButton {
+      left: 60px;
+      top: calc(50% - 15px);
+    }
+
+    #noButton {
+      left: calc(100% - 140px);
+      top: calc(50% - 15px);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="gradient-background">
+  <div class="flex items-center justify-center h-screen">
+    <div class="flex flex-col items-center p-4">
+      <img id="imageDisplay" src="https://media.tenor.com/SFy5Za0DyMEAAAAi/erm-fingers.gif" alt="Baby Peach gif" class="rounded-md h-[300px]" style="object-fit: cover;" />
+      <h2 id="forgiveQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">¿Me perdonas?</h2>
+      <div class="flex items-center" id="responseButtons">
+        <button id="yesButton"
+          class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium disabled:pointer-events-none disabled:opacity-50 hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition">
+          ¡Chi!
+        </button>
+        <button id="noButton"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition disabled:pointer-events-none disabled:opacity-50 hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white">
+          No...
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+    
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
+    const imageDisplay = document.getElementById('imageDisplay');
+    const forgiveQuestion = document.getElementById('forgiveQuestion');
+    const responseButtons = document.getElementById('responseButtons');
+
+    let noClickCount = 0;
+    const buttonSize = 75; // Base size for button width and height
+    let fontSize = 20; // Starting font size in pixels
+    const imagePaths = [
+      "https://media.tenor.com/SFy5Za0DyMEAAAAi/erm-fingers.gif",
+      "https://media.tenor.com/SFy5Za0DyMEAAAAi/erm-fingers.gif",
+      "https://media.tenor.com/SFy5Za0DyMEAAAAi/erm-fingers.gif",
+      "https://media1.tenor.com/m/KLYYrJbr5G4AAAAC/baby-peach-baby.gif",
+      "https://media1.tenor.com/m/KLYYrJbr5G4AAAAC/baby-peach-baby.gif",
+      "https://media1.tenor.com/m/KLYYrJbr5G4AAAAC/baby-peach-baby.gif",
+      "https://media1.tenor.com/m/KLYYrJbr5G4AAAAC/baby-peach-baby.gif",
+      "https://media1.tenor.com/m/KLYYrJbr5G4AAAAC/baby-peach-baby.gif",
+    ];
+
+    function getRandomPosition() {
+      const container = responseButtons.getBoundingClientRect();
+      const buttonWidth = noButton.offsetWidth;
+      const buttonHeight = noButton.offsetHeight;
+
+      let x = Math.random() * (container.width - buttonWidth);
+      let y = Math.random() * (container.height - buttonHeight);
+
+      return { x, y };
+    }
+
+    function moveButton(button) {
+      const { x, y } = getRandomPosition();
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
+    }
+
+    function startMovingButton(button) {
+      function move() {
+        if (button.disabled) {
+          moveButton(button);
+          requestAnimationFrame(move);
+        }
+      }
+      move();
+    }
+
+    // Inicializar los botones al cargar la página
+    window.onload = () => {
+      // Posicionar los botones en el inicio
+      yesButton.style.left = '60px';
+      yesButton.style.top = 'calc(50% - 15px)';
+      noButton.style.left = 'calc(100% - 140px)';
+      noButton.style.top = 'calc(50% - 15px)';
+    };
+
+    function redirectToYouTube() {
+      window.location.href = "https://youtu.be/p1JmzB6E-C8?si=Mc25iK_dtmNZC4ih"; // URL del video de YouTube
+    }
+
+    noButton.addEventListener('click', function() {
+      if (noClickCount < 7) {
+        noClickCount++;
+        imageDisplay.src = imagePaths[noClickCount];
+        if (noClickCount < 7) {
+          noButton.textContent = ["No.", "¿Segura?", "¿Muy, muy segura?", "porfis, corazón.", "Andale, preciosa.", "¡Ya no le piques!", "¡Yaa! 😿"][noClickCount];
+        }
+      }
+
+      if (noClickCount === 7) {
+        noButton.textContent = "¡Yaa! 😿";
+        noButton.disabled = true;
+        startMovingButton(noButton);
+      }
+    });
+
+    yesButton.addEventListener('click', () => {
+      imageDisplay.src = 'https://media.tenor.com/L-iMY2w2VRUAAAAi/bubu-dudu-yes-yes-yes.gif'; // Cambiar a feliz gatito
+      forgiveQuestion.textContent = "¡Yeii! ¡Te amo ♡ mi bomboncito de chocolate. Esta canción es para ti :'3 "; // Cambiar el texto de la pregunta
+      responseButtons.style.display = 'none'; // Ocultar ambos botones
+      confetti(); // Activar la animación de confeti
+      setTimeout(redirectToYouTube, 3000); // Redirigir después de 3 segundos
+    });
+  </script>  
+</body>
+</html>
